@@ -1,0 +1,63 @@
+body {
+    margin: 0;
+    background-color: #1f232a;
+    color: #c5ccd2;
+    font-family: 'Open Sans', sans-serif;
+    min-height: 100vh;
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+main {
+    flex-grow: 1;
+}
+
+.container {
+    max-width: 978px;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Sen', sans-serif;
+    text-align: center;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input {
+    padding: 10px 14px;
+    margin: 5px 0px;
+    border-radius: 5px;
+    border: 2px solid #474344;
+}
+
+button {
+    padding: 10px 14px;
+    margin: 5px 0px;
+    border-radius: 10px;
+    border: 2px solid #474344;
+    font-size: 0.9em;
+    color: #f8f6f4;
+    background-color: #84a8db;
+}
+
+#signature-canvas {
+    background-color: #c5ccd2;
+    border-radius: 5px;
+    box-shadow: inset 0px 0px 5px 2px #1f232a;
+    margin: 10px 0;
+}
+
+.signature-img {
+    background-color: #c5ccd2;
+    border-radius: 5px;
+    box-shadow: inset 0px 0px 5px 2px #1f232a;
+    margin: 10px 0;
+}
