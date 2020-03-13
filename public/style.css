@@ -16,6 +16,19 @@ body {
 header {
     width: 100%;
     padding: 10px 0;
+    font-family: 'Sen', sans-serif;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+}
+
+nav {
+    max-width: 978px;
+    padding: 10px 10px;
+}
+
+nav a {
+    margin: 0 10px;
 }
 
 main {
@@ -51,7 +64,7 @@ h2 {
     margin: 0;
 }
 
-h1 span.black {
+.black {
     color: black;
 }
 
@@ -123,6 +136,9 @@ button:focus {
 }
 
 footer {
-    width: 100%;
+    width: 98%;
     padding: 10px 0;
+    /* max-width: 1200px; */
+    padding: 10px 10px;
+    font-family: 'Sen', sans-serif;
 }

@@ -2,12 +2,14 @@
 const express = require('express');
 const app = express();
 const PORT = 8080;
+const secrets = require('./secrets');
 
 // SET UP express handlebars
 const hb = require('express-handlebars');
 app.engine('handlebars', hb());
 app.set('view engine', 'handlebars');
 
+// SET UP database
 const db = require('./db');
 
 // SET url for static serving of files
@@ -24,10 +26,22 @@ app.use(
 const cookieSession = require('cookie-session');
 app.use(
     cookieSession({
-        secret: `I'm always angry.`,
+        secret: secrets.cookieSession.secret,
         maxAge: 1000 * 60 * 60 * 24 * 14
     })
 );
+
+// SET UP csruf (has to be after cookie session and urlencoded)
+const csurf = require('csurf');
+app.use(csurf());
+
+app.use((req, res, next) => {
+    // DENY frames to prevent clickjacking
+    res.set('x-frame-options', 'DENY');
+    // res.locals is merged with object from res.render() on every res.render() && req.csrfToken()-method pulls token from req object
+    res.locals.csrfToken = req.csrfToken();
+    next();
+});
 
 // Check for cookie and redirect
 app.use((req, res, next) => {

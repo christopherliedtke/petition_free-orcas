@@ -14,6 +14,7 @@
         <input type="text" name="first-name" required placeholder="First Name">
         <input type="text" name="last-name" required placeholder="Last Name">
         <input type="hidden" name="signature-data" required>
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <canvas id="signature-canvas" width="500" height="130"></canvas>
         <button type="submit">SUBMIT</button>
     </form>
