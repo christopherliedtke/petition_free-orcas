@@ -1,15 +1,17 @@
 <div class="container">
 
-    <p>Thanks for signing!</p>
+    <h1>Thanks for signing!</h1>
 
-    <a href="/petition/signers">See all signers</a>
+    <h3>
+        <a href="/petition/signers">See all signers...</a>
+    </h3>
 
-    <p>Your signature</p>
 
     {{#if signData}}
         <div class="signature-img">
             <img src="{{signData}}" alt="">
         </div>
+        <p>Your signature</p>
     {{/if}}
 
 </div>

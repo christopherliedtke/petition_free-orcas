@@ -61,10 +61,9 @@ app.post('/petition', (req, res) => {
 
     db.addSignature(firstName, lastName, signature)
         .then(result => {
-            console.log('result.rows from addSignatures: ', result.rows);
+            // console.log('result.rows from addSignatures: ', result.rows);
             // SET cookie with row id of database entry
             req.session.signatureId = result.rows[0].id;
-            // res.cookie('signed', true);
             res.redirect('/petition/signed');
         })
         .catch(err => {
@@ -83,7 +82,6 @@ app.get('/petition/signed', (req, res) => {
 
     db.getSignature(req.session.signatureId)
         .then(result => {
-            // console.log('result.rows[0].signature: ', result.rows[0].signature);
             res.render('thank', {
                 layout: 'main',
                 signData: result.rows[0].signature,
@@ -101,7 +99,6 @@ app.get('/petition/signers', (req, res) => {
 
     db.getSignatures()
         .then(result => {
-            // console.log('result.rows from getSignatures: ', result.rows);
             const signatures = result.rows;
             res.render('signatureOverview', {
                 layout: 'main',
