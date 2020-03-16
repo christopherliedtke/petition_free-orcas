@@ -3,15 +3,17 @@
     <h1>Thanks for signing!</h1>
 
     <h3>
-        <a href="/petition/signers">See all signers...</a>
+        <a href="/petition/signers">See all {{count}} signers...</a>
     </h3>
 
 
+
     {{#if signData}}
-        <div class="signature-img">
-            <img src="{{signData}}" alt="">
+        <p class="text-center">Interested in more information? Go to <a href="https://uk.whales.org/our-4-goals/end-captivity/">uk.whales.org</a></p>
+        <div class="block-center">
+            <img class="signature-img" src="{{signData}}" alt="">
+            <p style="padding-left: 10px; margin-top: 0">Your signature</p>
         </div>
-        <p style="padding-left: 10px;">Your signature</p>
     {{/if}}
 
 </div>

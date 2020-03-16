@@ -1,13 +1,21 @@
+:root {
+    --light-shade: rgba(248, 246, 244, 1);
+    --light-accent: rgb(212, 212, 212);
+    --main-brand: rgba(224, 176, 128, 1);
+    --dark-accent: rgba(60, 58, 65, 1);
+    --dark-shade: rgba(0, 0, 0, 1);
+}
+
 body {
     margin: 0;
-    background-color: #3c3a41;
-    color: #c5ccd2;
+    background-color: var(--dark-accent);
+    color: var(--light-shade);
     font-family: 'Open Sans', sans-serif;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background: url('https://images.unsplash.com/photo-1574969970937-a90cdcbeea2e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3100&q=80') rgba(60, 58, 65, 1);
+    background: url('bart-van-meele-4Oc_CxCBhSA-unsplash.jpg') var(--dark-accent);
     background-blend-mode: overlay;
     background-position: center;
     background-size: cover;
@@ -37,10 +45,11 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
 }
 
 .container {
-    max-width: 978px;
+    max-width: 768px;
     margin: 30px 0;
 }
 
@@ -59,17 +68,38 @@ h2 {
     font-size: 2.5em;
 }
 
+h3 {
+    font-size: 1.5em;
+}
+
+p {
+    line-height: 1.7em;
+}
+
 #home h1,
 #home h2 {
     margin: 0;
 }
 
-.black {
-    color: black;
+.text-dark {
+    color: var(--dark-shade);
+}
+
+.text-shadow-light {
+    text-shadow: var(--light-shade) 1px 1px;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.block-center {
+    width: fit-content;
+    margin: 0 auto;
 }
 
 a {
-    color: #e0b080;
+    color: var(--main-brand);
     text-decoration: none;
 }
 
@@ -90,30 +120,30 @@ input {
     margin: 15px 0px;
     border-radius: 10px;
     border: none;
-    border-bottom: 2px solid #c2c2c2;
+    border-bottom: 2px solid var(--light-shade);
     background-color: transparent;
-    color: #c2c2c2;
+    color: var(--light-shade);
     font-size: 1.1em;
 }
 
 input:focus {
-    border-bottom: 2px solid #e0b080;
+    border-bottom: 2px solid var(--main-brand);
 }
 
 button {
     padding: 13px 25px;
     margin: 5px 0px;
     border-radius: 10px;
-    border: 2px solid black;
+    border: 2px solid var(--dark-shade);
     font-size: 1em;
-    color: #f8f6f4;
-    background-color: black;
+    color: var(--light-shade);
+    background-color: var(--dark-shade);
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #c2c2c2;
-    color: black;
+    background-color: var(--light-shade);
+    color: var(--dark-accent);
 }
 
 input:focus,
@@ -122,16 +152,17 @@ button:focus {
 }
 
 #signature-canvas {
-    background-color: #c5ccd2;
+    background-color: var(--light-accent);
     border-radius: 10px;
-    box-shadow: inset 0px 0px 5px 2px black;
+    box-shadow: inset 0px 0px 5px 2px var(--dark-accent);
     margin: 10px 0;
+    cursor: crosshair;
 }
 
 .signature-img {
-    background-color: #c5ccd2;
+    background-color: var(--light-accent);
     border-radius: 10px;
-    box-shadow: inset 0px 0px 5px 2px #3c3a41;
+    box-shadow: inset 0px 0px 5px 2px var(--dark-accent);
     margin: 10px 0;
 }
 

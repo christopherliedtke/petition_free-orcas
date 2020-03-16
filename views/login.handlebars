@@ -1,0 +1,19 @@
+<div class="container" id="login">
+    <h1>Free <span class="text-dark text-shadow-light">ORCAS</span></h1>
+    <h2>from the swimming pool</h2>
+
+    <h3>PLEASE LOGIN!</h3>
+
+    {{#if error}}
+        <p class="text-center">OOOOps there has been an error. Please try again!</p>
+    {{/if}}
+
+    <form action="" method="POST">
+        <input type="email" name="email" required placeholder="Email">
+        <input type="password" name="password" required placeholder="Password">
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <button type="submit">LOGIN</button>
+    </form>
+    <p class="text-center">Not yet registered? <a href="/register">Register here!</a></p>
+</div>
