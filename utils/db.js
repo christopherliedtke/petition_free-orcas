@@ -16,15 +16,13 @@ module.exports.addSignature = (signature, userId) => {
 
 module.exports.getSigners = () => {
     const q = `
-        SELECT users.first_name AS first_name, users.last_name AS last_name
+        SELECT users.first_name, users.last_name, profiles.age, profiles.city, profiles.homepage
         FROM users
+        LEFT JOIN profiles
+        ON users.id = profiles.user_id
         JOIN signatures
-        ON users.id = signatures.user_id;
-
-
+        ON users.id = signatures.user_id
         `;
-    // SELECT id
-    // FROM signatures
 
     return db.query(q);
 };
@@ -33,20 +31,22 @@ module.exports.getSignatureId = userId => {
     const q = `
         SELECT id
         FROM signatures
-        WHERE user_id=${userId}
+        WHERE user_id=$1
     `;
+    const params = [userId];
 
-    return db.query(q);
+    return db.query(q, params);
 };
 
 module.exports.getSignature = signatureId => {
     const q = `
         SELECT signature
         FROM signatures
-        WHERE id=${signatureId}
+        WHERE id=$1
     `;
+    const params = [signatureId];
 
-    return db.query(q);
+    return db.query(q, params);
 };
 
 module.exports.getSignaturesCount = () => {
@@ -74,8 +74,21 @@ module.exports.getUser = email => {
     const q = `
         SELECT *
         FROM users
-        WHERE email = '${email}'
+        WHERE email = $1
     `;
+    const params = [email];
 
-    return db.query(q);
+    return db.query(q, params);
+};
+
+// #PROFILES
+module.exports.addProfile = (age, city, homepage, id) => {
+    const q = `
+        INSERT INTO profiles (age, city, homepage, user_id)
+        VALUES ($1, $2, $3, $4)
+        RETURNING *
+    `;
+    const params = [age, city, homepage, id];
+
+    return db.query(q, params);
 };

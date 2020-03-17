@@ -1,6 +1,9 @@
 -- psql -d petition -f tables/users.sql
 
+DROP TABLE IF EXISTS profiles;
+DROP TABLE IF EXISTS signatures;
 DROP TABLE IF EXISTS users;
+
 
 CREATE TABLE users(
       id SERIAL PRIMARY KEY,

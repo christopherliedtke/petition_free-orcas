@@ -52,6 +52,7 @@ app.use((req, res, next) => {
         console.log('-----> redirect to /register');
         res.redirect('/petition');
     } else if (!req.session.user && req.url != '/register' && req.url != '/login') {
+        console.log('-----> redirect to /register');
         res.redirect('/register');
     } else {
         next();
@@ -60,12 +61,9 @@ app.use((req, res, next) => {
 
 // Check if user has signed already
 app.use((req, res, next) => {
-    if (req.session.user && req.url === '/petition') {
-        if (req.session.user.signatureId) {
-            res.redirect('/petition/signed');
-        } else {
-            next();
-        }
+    if (req.session.user && req.session.user.signatureId && req.url === '/petition') {
+        console.log('-----> redirect to /petition/signed');
+        res.redirect('/petition/signed');
     } else {
         next();
     }
@@ -104,7 +102,7 @@ app.post('/register', (req, res) => {
                 req.session.user.id = result.rows[0].id;
                 req.session.user.firstName = result.rows[0]['first_name'];
                 req.session.user.lastName = result.rows[0]['last_name'];
-                res.redirect('/petition');
+                res.redirect('/userprofile');
             })
             .catch(err => {
                 console.log('Error on POST /register: ', err);
@@ -137,26 +135,34 @@ app.post('/login', (req, res) => {
         .then(result => {
             const hashedDbPw = result.rows[0].password;
 
-            compare(passwordInput, hashedDbPw).then(boolean => {
-                if (boolean) {
-                    req.session.user = {};
-                    req.session.user.id = result.rows[0].id;
-                    req.session.user.firstName = result.rows[0]['first_name'];
-                    req.session.user.lastName = result.rows[0]['last_name'];
+            compare(passwordInput, hashedDbPw)
+                .then(comparisonResult => {
+                    if (comparisonResult) {
+                        req.session.user = {
+                            id: result.rows[0].id,
+                            firstName: result.rows[0]['first_name'],
+                            lastName: result.rows[0]['last_name']
+                        };
+                        // req.session.user.id = result.rows[0].id;
+                        // req.session.user.firstName = result.rows[0]['first_name'];
+                        // req.session.user.lastName = result.rows[0]['last_name'];
 
-                    db.getSignatureId(req.session.user.id)
-                        .then(result => {
-                            req.session.user.signatureId = result.rows[0].id;
-                            res.redirect('/petition/signed');
-                        })
-                        .catch(err => {
-                            console.log('Error in getSignatureId() on login: ', err);
-                            res.redirect('/petition');
-                        });
-                } else {
-                    throw new Error('Password does not fit to email.');
-                }
-            });
+                        db.getSignatureId(req.session.user.id)
+                            .then(result => {
+                                req.session.user.signatureId = result.rows[0].id;
+                                res.redirect('/petition/signed');
+                            })
+                            .catch(err => {
+                                console.log('Error in getSignatureId() on login: ', err);
+                                res.redirect('/petition');
+                            });
+                    } else {
+                        throw new Error('Password does not fit to email.');
+                    }
+                })
+                .catch(err => {
+                    console.log('Error on compare() on /login: ', err);
+                });
         })
         .catch(err => {
             console.log('Error on POST /login: ', err);
@@ -165,6 +171,34 @@ app.post('/login', (req, res) => {
                 error: true,
                 title: 'My Petition'
             });
+        });
+});
+
+// #GET to /userprofile
+app.get('/userprofile', (req, res) => {
+    console.log('-----> made it to GET /userprofile');
+    res.render('userprofile', {
+        layout: 'main',
+        title: 'My Petition'
+    });
+});
+
+// #POST to /userprofile
+app.post('/userprofile', (req, res) => {
+    console.log('-----> made it to POST /userprofile');
+
+    const age = req.body.age || null;
+    const city = req.body.city || null;
+    const homepage = req.body.homepage || null;
+    const id = req.session.user.id;
+
+    db.addProfile(age, city, homepage, id)
+        .then(result => {
+            // console.log('result.rows[0]: ', result.rows[0]);
+            res.redirect('/petition');
+        })
+        .catch(err => {
+            console.log('Error on addProfile() on /userprofile: ', err);
         });
 });
 
@@ -230,7 +264,6 @@ app.get('/petition/signers', (req, res) => {
     db.getSigners()
         .then(result => {
             const signers = result.rows;
-            console.log('signers: ', signers);
 
             res.render('signatureOverview', {
                 layout: 'main',
@@ -239,7 +272,34 @@ app.get('/petition/signers', (req, res) => {
             });
         })
         .catch(err => {
-            console.log('err in getSignatures: ', err);
+            console.log('err on getSigners() on /petition/signers: ', err);
+        });
+});
+
+// #GET to /petition/signers/:city
+app.get('/petition/signers/:city', (req, res) => {
+    console.log('-----> made it to GET /petition/signers:city');
+
+    const city = req.params.city;
+
+    db.getSigners()
+        .then(result => {
+            const signers = result.rows;
+
+            res.render('signatureOverviewCity', {
+                layout: 'main',
+                title: 'My Petition',
+                city,
+                signers,
+                helpers: {
+                    checkCity(arg) {
+                        return city == arg;
+                    }
+                }
+            });
+        })
+        .catch(err => {
+            console.log('err on getSigners() on /petition/signers/:city: ', err);
         });
 });
 

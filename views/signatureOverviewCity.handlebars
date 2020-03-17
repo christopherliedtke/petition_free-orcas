@@ -3,7 +3,11 @@
 <ul class="fa-ul">
     {{#signers}}
 
+        {{#if (checkCity city)}}
+
             {{>signers}}
+
+        {{/if}}
 
     {{/signers}}
 </ul>
