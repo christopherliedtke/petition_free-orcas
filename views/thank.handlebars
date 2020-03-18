@@ -1,9 +1,10 @@
 <div class="container" id="thank">
 
-    <h1>Thanks for signing!</h1>
+    <h1>Free <span class="text-dark text-shadow-light">ORCAS</span></h1>
+    <h2>Thanks for signing!</h2>
 
     <h3>
-        <a href="/petition/signers">See all {{count}} signers...</a>
+        <a href="/petition/signers">See all {{ count }} signers...</a>
     </h3>
 
     {{#if signData}}
@@ -16,8 +17,6 @@
     {{/if}}
 
     <form action="" method="POST">
-        {{!-- <input type="text" name="first-name" required placeholder="First Name">
-        <input type="text" name="last-name" required placeholder="Last Name"> --}}
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <button type="submit" class="warning"><i class="fas fa-trash" style="margin-right: 10px;"></i> DELETE SIGNATURE</button>
     </form>

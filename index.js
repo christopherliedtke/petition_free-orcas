@@ -63,7 +63,7 @@ app.use((req, res, next) => {
     if (req.session.user && (req.url === '/register' || req.url == '/login')) {
         console.log('-----> redirect to /petition');
         res.redirect('/petition');
-    } else if (!req.session.user && req.url != '/register' && req.url != '/login') {
+    } else if (!req.session.user && req.url != '/register' && req.url != '/login' && req.url != '/') {
         console.log('-----> redirect to /register');
         res.redirect('/register');
     } else {
@@ -84,8 +84,14 @@ app.use((req, res, next) => {
 // #GET to /
 app.get('/', (req, res) => {
     console.log('-----> made it to GET /');
-    console.log('-----> redirect to /register');
-    res.redirect('/register');
+
+    res.render('home', {
+        layout: 'main',
+        title: 'My Petition'
+    });
+
+    // console.log('-----> redirect to /register');
+    // res.redirect('/register');
 });
 
 // #GET to /register
@@ -317,10 +323,42 @@ app.post('/userprofile/edit', (req, res) => {
     }
 });
 
+// #GET to /userprofile/delete
+app.get('/userprofile/delete', (req, res) => {
+    console.log('-----> made it to GET /userprofile/delete');
+    res.render('userprofileDelete', {
+        layout: 'main',
+        title: 'My Petition'
+    });
+});
+
+// #POST to /userprofile/delete
+app.post('/userprofile/delete', (req, res) => {
+    console.log('-----> made it to POST /userprofile/delete');
+
+    const userId = req.session.user.id;
+
+    Promise.all([db.deleteSignature(userId), db.deleteProfile(userId), db.deleteUser(userId)])
+        .then(() => {
+            // delete cookie and redirect
+            delete req.session.user;
+            res.redirect('/');
+        })
+        .catch(err => {
+            console.log('Error on Promise.all() on /userprofile/delete: ', err);
+
+            res.render('userprofileDelete', {
+                layout: 'main',
+                error: errorMsg,
+                title: 'My Petition'
+            });
+        });
+});
+
 // #GET to /petition
 app.get('/petition', (req, res) => {
     console.log('-----> made it to GET /petition');
-    res.render('home', {
+    res.render('petition', {
         layout: 'main',
         title: 'My Petition'
     });
@@ -340,7 +378,7 @@ app.post('/petition', (req, res) => {
         })
         .catch(err => {
             console.log('error on addSignature() on /petition: ', err);
-            res.render('home', {
+            res.render('petition', {
                 layout: 'main',
                 error: errorMsg,
                 title: 'My Petition'
@@ -435,6 +473,14 @@ app.get('/petition/signers/:city', (req, res) => {
         .catch(err => {
             console.log('err on getSigners() on /petition/signers/:city: ', err);
         });
+});
+
+// #GET to /logout
+app.get('/logout', (req, res) => {
+    console.log('-----> made it to GET /logout');
+
+    delete req.session.user;
+    res.redirect('/');
 });
 
 app.listen(PORT, () => {

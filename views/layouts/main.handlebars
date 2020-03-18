@@ -16,12 +16,17 @@
     </head>
     <body>
         <header>
-                <nav>
+            <nav>
                 <a href="/">HOME</a>
-                <a href="/petition">PETITION</a>
-                <a href="/petition/signers">SIGNERS</a>
-                {{#if loggedIn}}<a href="/userprofile/edit"><i class="fas fa-user" style="margin-right: 8px;"></i>MY PROFILE</a>{{/if}}
+                {{#if loggedIn}}
+                    <a href="/petition">PETITION</a>
+                    <a href="/petition/signers">SIGNERS</a>
+                    <a href="/userprofile/edit"><i class="fas fa-user" style="margin-right: 8px;"></i>MY PROFILE</a>
+                {{else}}
+                    <a href="/petition">REGISTER</a>
+                {{/if}}
             </nav>
+            {{#if loggedIn}}<a href="/logout"><button class="log">Logout</button></a> {{else}} <a href="/login"><button class="log">Login</button></a> {{/if}}
         </header>
         
         <main>
@@ -35,10 +40,5 @@
             <span>&copy; Free Willy Foundation</span>
         </footer>
 
-        {{!-- <script
-        src="https://code.jquery.com/jquery-3.4.1.min.js"
-        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-        crossorigin="anonymous"></script> --}}
-        {{!-- <script src="/script.js"></script> --}}
     </body>
 </html>

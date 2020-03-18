@@ -124,6 +124,17 @@ module.exports.updateUserExclPassword = (firstName, lastName, email, userId) => 
     return db.query(q, params);
 };
 
+module.exports.deleteUser = userId => {
+    const q = `
+        DELETE
+        FROM users
+        WHERE id=$1
+    `;
+    const params = [userId];
+
+    return db.query(q, params);
+};
+
 // #PROFILES
 module.exports.addProfile = (age, city, homepage, userId) => {
     const q = `
@@ -145,6 +156,17 @@ module.exports.updateProfile = (age, city, homepage, userId) => {
         RETURNING *
     `;
     const params = [age, city, homepage, userId];
+
+    return db.query(q, params);
+};
+
+module.exports.deleteProfile = userId => {
+    const q = `
+        DELETE
+        FROM profiles
+        WHERE user_id=$1
+    `;
+    const params = [userId];
 
     return db.query(q, params);
 };
