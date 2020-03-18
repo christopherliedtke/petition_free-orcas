@@ -1,8 +1,8 @@
 // SET UP express
 const express = require('express');
 const app = express();
-const PORT = 8080;
-const secrets = require('./utils/secrets');
+const PORT = process.env.PORT || 8080;
+// const secrets = require('./utils/secrets');
 
 const errorMsg = 'OOOOps there has been an error. Please try again!';
 
@@ -31,7 +31,7 @@ app.use(
 const cookieSession = require('cookie-session');
 app.use(
     cookieSession({
-        secret: secrets.cookieSession.secret,
+        secret: "I'm always angry.",
         maxAge: 1000 * 60 * 60 * 24 * 14
     })
 );
