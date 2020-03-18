@@ -8,5 +8,5 @@ CREATE TABLE profiles (
     age INTEGER,
     city VARCHAR(50),
     homepage VARCHAR(80),
-    user_id INTEGER NOT NULL REFERENCES users(id)
+    user_id INTEGER NOT NULL UNIQUE REFERENCES users(id)
 );

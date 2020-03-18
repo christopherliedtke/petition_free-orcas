@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" id="thank">
 
     <h1>Thanks for signing!</h1>
 
@@ -6,15 +6,20 @@
         <a href="/petition/signers">See all {{count}} signers...</a>
     </h3>
 
-
-
     {{#if signData}}
         <p class="text-center">Interested in more information? Go to <a href="https://uk.whales.org/our-4-goals/end-captivity/">uk.whales.org</a></p>
+        <p class="text-center"><a href="/userprofile/edit">EDIT YOUR PROFILE</a></p>
         <div class="block-center">
             <img class="signature-img" src="{{signData}}" alt="">
             <p style="padding-left: 10px; margin-top: 0">Your signature</p>
         </div>
     {{/if}}
 
-</div>
+    <form action="" method="POST">
+        {{!-- <input type="text" name="first-name" required placeholder="First Name">
+        <input type="text" name="last-name" required placeholder="Last Name"> --}}
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <button type="submit" class="warning"><i class="fas fa-trash" style="margin-right: 10px;"></i> DELETE SIGNATURE</button>
+    </form>
 
+</div>

@@ -9,7 +9,7 @@
     <h3>LET'S STOP THIS CRUELTY!</h3>
 
     {{#if error}}
-        <p class="text-center">OOOOps there has been an error. Please try again!</p>
+        <p class="text-center">{{ error }}</p>
     {{/if}}
 
     <form action="" method="POST">
@@ -19,7 +19,10 @@
         <p>SIGN HERE</p>
         <input type="hidden" name="signature-data" required>
         <canvas id="signature-canvas" width="500" height="130"></canvas>
-        <button type="submit">SUBMIT</button>
+        <div>
+            <button type="submit">SUBMIT</button>
+            <button id="delete" class="warning"><i class="fas fa-trash"></i></button>
+        </div>
     </form>
 </div>
 

@@ -11,6 +11,13 @@ compare = promisify(compare);
 module.exports.compare = compare;
 module.exports.hash = plainTextPw => genSalt().then(salt => hash(plainTextPw, salt));
 
+// // hash(null) test
+// hash(null)
+//     .then(result => {
+//         console.log('result: ', result);
+//     })
+//     .catch(err => console.log('error: ', err));
+
 // DEMO FOR CLASS
 // genSalt()
 //     .then(salt => {

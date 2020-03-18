@@ -1,0 +1,31 @@
+<div class="container" id="userprofile-edit">
+    {{!-- <span>Free <span class="text-dark text-shadow-light">ORCAS</span></span> --}}
+    {{!-- <h2>from the swimming pool</h2> --}}
+
+    <h3>CHANGE YOUR PROFILE!</h3>
+
+    {{#if error}}
+        <p class="text-center">{{ error }}</p>
+    {{/if}}
+
+    <form action="" method="POST">
+        <label for="first-name">First Name</label>
+        <input type="text" name="first-name" required placeholder="First Name" value="{{ user.first_name }}">
+        <label for="first-name">Last Name</label>
+        <input type="text" name="last-name" required placeholder="Last Name" value="{{ user.last_name }}">
+        <label for="first-name">Email</label>
+        <input type="email" name="email" required placeholder="Email" value="{{ user.email }}">
+        <label for="first-name">Password</label>
+        <input type="password" name="password" placeholder="New Password">
+        <label for="first-name">Age</label>
+        <input type="text" name="age" placeholder="Age" {{#if user.age}} value="{{user.age}}" {{/if}}>
+        <label for="first-name">City</label>
+        <input type="text" name="city" placeholder="City" {{#if user.city}} value="{{user.city}}" {{/if}}>
+        <label for="first-name">Homepage</label>
+        <input type="url" name="homepage" pattern="http.*" placeholder="https://www.example.com" {{#if user.homepage}} value="{{user.homepage}}" {{/if}}>
+
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+        <button type="submit">SAVE</button>
+    </form>
+    {{!-- <a class="text-center">Already registered? <a href="/login">LogIn here!</a></a> --}}
+</div>

@@ -4,6 +4,8 @@ const app = express();
 const PORT = 8080;
 const secrets = require('./utils/secrets');
 
+const errorMsg = 'OOOOps there has been an error. Please try again!';
+
 // SET UP express handlebars
 const hb = require('express-handlebars');
 app.engine('handlebars', hb());
@@ -48,8 +50,18 @@ app.use((req, res, next) => {
 
 // Check if user is logged in
 app.use((req, res, next) => {
+    if (req.session.user) {
+        res.locals.loggedIn = true;
+        next();
+    } else {
+        next();
+    }
+});
+
+// Redirect user in case they are logged in/out
+app.use((req, res, next) => {
     if (req.session.user && (req.url === '/register' || req.url == '/login')) {
-        console.log('-----> redirect to /register');
+        console.log('-----> redirect to /petition');
         res.redirect('/petition');
     } else if (!req.session.user && req.url != '/register' && req.url != '/login') {
         console.log('-----> redirect to /register');
@@ -70,7 +82,6 @@ app.use((req, res, next) => {
 });
 
 // #GET to /
-// redirect to register
 app.get('/', (req, res) => {
     console.log('-----> made it to GET /');
     console.log('-----> redirect to /register');
@@ -98,17 +109,21 @@ app.post('/register', (req, res) => {
     hash(password).then(hashedPw => {
         db.addUser(firstName, lastName, email, hashedPw)
             .then(result => {
-                req.session.user = {};
-                req.session.user.id = result.rows[0].id;
-                req.session.user.firstName = result.rows[0]['first_name'];
-                req.session.user.lastName = result.rows[0]['last_name'];
+                req.session.user = {
+                    id: result.rows[0].id,
+                    firstName: result.rows[0]['first_name'],
+                    lastName: result.rows[0]['last_name'],
+                    email: email
+                };
+
+                console.log('-----> redirect to /userprofile');
                 res.redirect('/userprofile');
             })
             .catch(err => {
                 console.log('Error on POST /register: ', err);
                 res.render('register', {
                     layout: 'main',
-                    error: true,
+                    error: errorMsg,
                     title: 'My Petition'
                 });
             });
@@ -127,6 +142,7 @@ app.get('/login', (req, res) => {
 // #POST to /login
 app.post('/login', (req, res) => {
     console.log('-----> made it to POST /login');
+
     // compare login data to db entries
     const email = req.body['email'];
     const passwordInput = req.body['password'];
@@ -141,19 +157,19 @@ app.post('/login', (req, res) => {
                         req.session.user = {
                             id: result.rows[0].id,
                             firstName: result.rows[0]['first_name'],
-                            lastName: result.rows[0]['last_name']
+                            lastName: result.rows[0]['last_name'],
+                            email: email
                         };
-                        // req.session.user.id = result.rows[0].id;
-                        // req.session.user.firstName = result.rows[0]['first_name'];
-                        // req.session.user.lastName = result.rows[0]['last_name'];
 
                         db.getSignatureId(req.session.user.id)
                             .then(result => {
                                 req.session.user.signatureId = result.rows[0].id;
+                                console.log('-----> redirect to /petition/signed');
                                 res.redirect('/petition/signed');
                             })
                             .catch(err => {
                                 console.log('Error in getSignatureId() on login: ', err);
+                                console.log('-----> redirect to /petition');
                                 res.redirect('/petition');
                             });
                     } else {
@@ -162,13 +178,18 @@ app.post('/login', (req, res) => {
                 })
                 .catch(err => {
                     console.log('Error on compare() on /login: ', err);
+                    res.render('login', {
+                        layout: 'main',
+                        error: 'Ooops! Email and password do not match. Try again, please.',
+                        title: 'My Petition'
+                    });
                 });
         })
         .catch(err => {
             console.log('Error on POST /login: ', err);
             res.render('login', {
                 layout: 'main',
-                error: true,
+                error: 'User does not exist!',
                 title: 'My Petition'
             });
         });
@@ -193,13 +214,107 @@ app.post('/userprofile', (req, res) => {
     const id = req.session.user.id;
 
     db.addProfile(age, city, homepage, id)
-        .then(result => {
-            // console.log('result.rows[0]: ', result.rows[0]);
+        .then(() => {
+            console.log('-----> redirect to /petition');
             res.redirect('/petition');
         })
         .catch(err => {
             console.log('Error on addProfile() on /userprofile: ', err);
         });
+});
+
+// #GET to /userprofile/edit
+app.get('/userprofile/edit', (req, res) => {
+    console.log('-----> made it to GET /userprofile/edit');
+
+    db.getUser(req.session.user.email)
+        .then(result => {
+            res.render('userprofileEdit', {
+                layout: 'main',
+                title: 'My Petition',
+                user: result.rows[0]
+            });
+        })
+        .catch(err => {
+            console.log('Error on getUser() on /userprofile/edit: ', err);
+        });
+});
+
+// #POST to /userprofile/edit
+app.post('/userprofile/edit', (req, res) => {
+    console.log('-----> made it to POST /userprofile/edit');
+
+    const newFirstName = req.body['first-name'];
+    const newLastName = req.body['last-name'];
+    const newEmail = req.body['email'];
+    const newPassword = req.body['password'] || null;
+    const newAge = req.body['age'] || null;
+    const newCity = req.body['city'] || null;
+    const newHomepage = req.body['homepage'] || null;
+    const userId = req.session.user.id;
+
+    if (newPassword === null) {
+        Promise.all([db.updateUserExclPassword(newFirstName, newLastName, newEmail, userId), db.updateProfile(newAge, newCity, newHomepage, userId)])
+            .then(() => {
+                res.redirect('/petition');
+            })
+            .catch(err => {
+                console.log('Error on Promise.all() on /userprofile/edit: ', err);
+
+                db.getUser(req.session.user.email)
+                    .then(result => {
+                        res.render('userprofileEdit', {
+                            layout: 'main',
+                            error: errorMsg,
+                            title: 'My Petition',
+                            user: result.rows[0]
+                        });
+                    })
+                    .catch(err => {
+                        console.log('Error on getUser() on /userprofile/edit: ', err);
+                    });
+            });
+    } else {
+        hash(newPassword)
+            .then(hashedNewPassword => {
+                Promise.all([db.updateUserInclPassword(newFirstName, newLastName, newEmail, hashedNewPassword, userId), db.updateProfile(newAge, newCity, newHomepage, userId)])
+                    .then(() => {
+                        res.redirect('/petition');
+                    })
+                    .catch(err => {
+                        console.log('Error on Promise.all() on /userprofile/edit: ', err);
+
+                        db.getUser(req.session.user.email)
+                            .then(result => {
+                                res.render('userprofileEdit', {
+                                    layout: 'main',
+                                    error: errorMsg,
+                                    title: 'My Petition',
+                                    user: result.rows[0]
+                                });
+                            })
+                            .catch(err => {
+                                console.log('Error on getUser() on /userprofile/edit: ', err);
+                            });
+                    });
+            })
+            .catch(err => {
+                console.log('Error on hash() on /userprofile/edit: ', err);
+
+                db.getUser(req.session.user.email)
+                    .then(result => {
+                        res.render('userprofileEdit', {
+                            layout: 'main',
+                            error: errorMsg,
+                            title: 'My Petition',
+                            user: result.rows[0]
+                        });
+                    })
+                    .catch(err => {
+                        console.log('Error on getUser() on /userprofile/edit: ', err);
+                    });
+            });
+    }
 });
 
 // #GET to /petition
@@ -224,10 +339,10 @@ app.post('/petition', (req, res) => {
             res.redirect('/petition/signed');
         })
         .catch(err => {
-            console.log('error in addSignature(): ', err);
+            console.log('error on addSignature() on /petition: ', err);
             res.render('home', {
                 layout: 'main',
-                error: true,
+                error: errorMsg,
                 title: 'My Petition'
             });
         });
@@ -254,6 +369,21 @@ app.get('/petition/signed', (req, res) => {
         })
         .catch(err => {
             console.log('err: ', err);
+        });
+});
+
+// #POST to /petition/signed
+app.post('/petition/signed', (req, res) => {
+    console.log('-----> made it to the POST /petition/signed');
+    delete req.session.user.signatureId;
+
+    db.deleteSignature(req.session.user.id)
+        .then(() => {
+            console.log('Signature deleted');
+            res.redirect('/petition');
+        })
+        .catch(err => {
+            console.log('Error on deleteSignature() on /petition/signed: ', err);
         });
 });
 
@@ -293,7 +423,11 @@ app.get('/petition/signers/:city', (req, res) => {
                 signers,
                 helpers: {
                     checkCity(arg) {
-                        return city == arg;
+                        if (arg != null) {
+                            return city.toLowerCase() == arg.toLowerCase();
+                        } else {
+                            return false;
+                        }
                     }
                 }
             });

@@ -115,15 +115,22 @@ form {
     align-items: center;
 }
 
+label {
+    color: var(--main-brand);
+    align-self: flex-start;
+    margin-left: 20px;
+}
+
 input {
-    padding: 10px 14px 5px 14px;
-    margin: 15px 0px;
+    padding: 5px 14px 5px 14px;
+    margin: 5px 0 25px 0;
     border-radius: 10px;
     border: none;
     border-bottom: 2px solid var(--light-shade);
     background-color: transparent;
     color: var(--light-shade);
     font-size: 1.1em;
+    min-width: 250px;
 }
 
 input:focus {
@@ -144,6 +151,11 @@ button {
 button:hover {
     background-color: var(--light-shade);
     color: var(--dark-accent);
+}
+
+button.warning:hover {
+    color: #aa0909;
+    border-color: #aa0909;
 }
 
 input:focus,
@@ -172,4 +184,10 @@ footer {
     /* max-width: 1200px; */
     padding: 10px 10px;
     font-family: 'Sen', sans-serif;
+    display: flex;
+    align-items: center;
+}
+
+footer img {
+    margin-right: 10px;
 }

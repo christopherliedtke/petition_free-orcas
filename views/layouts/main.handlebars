@@ -1,42 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/style.css">
-    {{!-- Google fonts --}}
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Sen&display=swap" rel="stylesheet">
-    <!-- Font Awesome -->
-    <script src="https://kit.fontawesome.com/359e13dbb2.js" crossorigin="anonymous"></script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/style.css">
+        {{!-- Google fonts --}}
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Sen&display=swap" rel="stylesheet">
+        <!-- Font Awesome -->
+        <script src="https://kit.fontawesome.com/359e13dbb2.js" crossorigin="anonymous"></script>
 
-    {{!-- Favicon --}}
-    <link rel="shortcut icon" href="/orca_logo_64x64.png" type="image/x-icon">
+        {{!-- Favicon --}}
+        <link rel="shortcut icon" href="/orca_logo_64x64.png" type="image/x-icon">
 
-    <title>{{ title }}</title>
-</head>
-<body>
-    <header>
-        <nav>
-            <a href="/">HOME</a>
-            <a href="/petition">PETITION</a>
-            <a href="/petition/signers">SIGNERS</a>
-        </nav>
-    </header>
-    
-    <main>
+        <title>{{ title }}</title>
+    </head>
+    <body>
+        <header>
+                <nav>
+                <a href="/">HOME</a>
+                <a href="/petition">PETITION</a>
+                <a href="/petition/signers">SIGNERS</a>
+                {{#if loggedIn}}<a href="/userprofile/edit"><i class="fas fa-user" style="margin-right: 8px;"></i>MY PROFILE</a>{{/if}}
+            </nav>
+        </header>
+        
+        <main>
 
-        {{{ body }}}
+            {{{ body }}}
 
-    </main>
+        </main>
 
-    <footer>
+        <footer>
+            <img src="/orca_logo_400x400.png" height="30" alt="">
             <span>&copy; Free Willy Foundation</span>
-    </footer>
+        </footer>
 
-    {{!-- <script
-    src="https://code.jquery.com/jquery-3.4.1.min.js"
-    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-    crossorigin="anonymous"></script> --}}
-    {{!-- <script src="/script.js"></script> --}}
-</body>
+        {{!-- <script
+        src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+        crossorigin="anonymous"></script> --}}
+        {{!-- <script src="/script.js"></script> --}}
+    </body>
 </html>
