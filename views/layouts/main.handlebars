@@ -12,7 +12,7 @@
         {{!-- Favicon --}}
         <link rel="shortcut icon" href="/orca_logo_64x64.png" type="image/x-icon">
 
-        <title>{{ title }}</title>
+        <title>Free Orcas</title>
     </head>
     <body>
         <header>
@@ -20,13 +20,15 @@
                 <a href="/">HOME</a>
                 {{#if loggedIn}}
                     <a href="/petition">PETITION</a>
-                    <a href="/petition/signers">SIGNERS</a>
+                    {{#if signed}}
+                        <a href="/petition/signers">SIGNERS</a>
+                    {{/if}}
                     <a href="/userprofile/edit"><i class="fas fa-user" style="margin-right: 8px;"></i>MY PROFILE</a>
                 {{else}}
-                    <a href="/petition">REGISTER</a>
+                    <a href="/register">REGISTER</a>
                 {{/if}}
+                {{#if loggedIn}}<a href="/logout"><button class="log">Logout</button></a> {{else}} <a href="/login"><button class="log">Login</button></a> {{/if}}
             </nav>
-            {{#if loggedIn}}<a href="/logout"><button class="log">Logout</button></a> {{else}} <a href="/login"><button class="log">Login</button></a> {{/if}}
         </header>
         
         <main>
@@ -36,8 +38,10 @@
         </main>
 
         <footer>
-            <img src="/orca_logo_400x400.png" height="30" alt="">
-            <span>&copy; Free Willy Foundation</span>
+            <div>
+                <img src="/orca_logo_400x400.png" height="30" alt="">
+                <span>&copy; Free Willy Foundation</span>
+            </div>
         </footer>
 
     </body>

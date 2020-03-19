@@ -19,16 +19,14 @@ body {
     background-blend-mode: overlay;
     background-position: center;
     background-size: cover;
+    box-sizing: border-box;
+    /* overflow: hidden; */
 }
 
 header {
     width: 100%;
-    /* padding: 10px 0; */
     font-family: 'Sen', sans-serif;
     background-color: rgba(0, 0, 0, 0.6);
-    display: flex;
-    justify-content: center;
-    position: relative;
 }
 
 button.log {
@@ -43,8 +41,10 @@ button.log {
 }
 
 nav {
-    max-width: 978px;
     padding: 20px 10px;
+    display: flex;
+    justify-content: center;
+    position: relative;
 }
 
 nav a {
@@ -63,6 +63,7 @@ main {
 .container {
     max-width: 768px;
     margin: 30px 0;
+    padding: 0 10px;
 }
 
 h1,
@@ -202,15 +203,33 @@ button:focus {
 }
 
 footer {
-    width: 98%;
-    padding: 10px 0;
-    /* max-width: 1200px; */
+    width: 100%;
+}
+
+footer div {
     padding: 10px 10px;
     font-family: 'Sen', sans-serif;
     display: flex;
     align-items: center;
+    flex-grow: 1;
 }
 
 footer img {
     margin-right: 10px;
+}
+
+@media only screen and (max-width: 600px) {
+    nav {
+        flex-direction: column;
+        padding: 10px 10px;
+    }
+
+    nav a {
+        padding: 5px 10px;
+    }
+
+    nav a .log {
+        top: 20px;
+        transform: translateY(0);
+    }
 }
