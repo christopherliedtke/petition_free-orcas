@@ -1,11 +1,6 @@
-
 <div class="container" id="home">
     <h1>Free <span class="text-dark text-shadow-light">ORCAS</span></h1>
     <h2>from the swimming pool</h2>
-
-    {{!-- <p>Orcas, also known as killer whales, have been kept in captivity since 1961. They are the defenceless victims of a cruel industry that is responsible for dozens of free-ranging orcas being snatched from their families and condemned to a life in artificially assembled groups that has nothing to do with their former lifes.</p>
-    <p>Orcas are known to have a great emotional intelligence &ndash; probably even higher than humans &ndash; are living in their own tribes for all their life of which each of them speak their own unique language. Putting these creatures in a small swimming pool to entertain us is just a shame for humanity.</p> --}}
-
     <h3>LET'S STOP THIS CRUELTY!</h3>
 
     {{#if error}}
@@ -13,8 +8,6 @@
     {{/if}}
 
     <form action="" method="POST">
-        {{!-- <input type="text" name="first-name" required placeholder="First Name">
-        <input type="text" name="last-name" required placeholder="Last Name"> --}}
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <p>SIGN HERE</p>
         <input type="hidden" name="signature-data" required>
@@ -25,9 +18,6 @@
         </div>
     </form>
 </div>
-
-
-
 
 <script
     src="https://code.jquery.com/jquery-3.4.1.min.js"

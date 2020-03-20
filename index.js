@@ -1,37 +1,29 @@
-// SET UP express
 const express = require('express');
 const app = express();
-module.exports = app;
+module.exports.app = app;
+
 const PORT = process.env.PORT || 8080;
-// const secrets = require('./utils/secrets');
 
-const errorMsg = 'OOOOps there has been an error. Please try again!';
-
-// Require route middleware
 const { requireLoggedInUser, requireLoggedOutUser, requireSignature, requireNoSignature } = require('./utils/middleware');
 
-// SET UP express handlebars
 const hb = require('express-handlebars');
 app.engine('handlebars', hb());
 app.set('view engine', 'handlebars');
 
-// SET UP database
 const db = require('./utils/db');
 
-// SET UP bcrypt
 const { hash, compare } = require('./utils/bcrypt');
 
-// SET url for static serving of files
+const errorMsg = 'OOOOps there has been an error. Please try again!';
+
 app.use(express.static('./public'));
 
-// PARSE request body
 app.use(
     express.urlencoded({
         extended: false
     })
 );
 
-// REQUIRE & USE cookie session
 const cookieSession = require('cookie-session');
 app.use(
     cookieSession({
@@ -40,19 +32,15 @@ app.use(
     })
 );
 
-// SET UP csruf (has to be after cookie session and urlencoded)
 const csurf = require('csurf');
 app.use(csurf());
 
 app.use((req, res, next) => {
-    // DENY frames to prevent clickjacking
     res.set('x-frame-options', 'DENY');
-    // res.locals is merged with object from res.render() on every res.render() && req.csrfToken()-method pulls token from req object
     res.locals.csrfToken = req.csrfToken();
     next();
 });
 
-// Check if user is logged in && has signed
 app.use((req, res, next) => {
     if (req.session.user) {
         res.locals.loggedIn = true;
@@ -63,32 +51,15 @@ app.use((req, res, next) => {
     next();
 });
 
-// Check if user has signed in
-// app.use((req, res, next) => {
-//     if (req.session.user && req.session.user.signatureId) {
-//         res.locals.signed = true;
-//         next();
-//     } else {
-//         next();
-//     }
-// });
-
-// #GET to /
 app.get('/', (req, res) => {
-    console.log('-----> made it to GET /');
     res.render('home');
 });
 
-// #GET to /register
 app.get('/register', requireLoggedOutUser, (req, res) => {
-    console.log('-----> made it to GET /register');
     res.render('register');
 });
 
-// #POST to /register
 app.post('/register', requireLoggedOutUser, (req, res) => {
-    console.log('-----> made it to POST /register');
-
     const firstName = req.body['first-name'];
     const lastName = req.body['last-name'];
     const email = req.body['email'];
@@ -104,7 +75,6 @@ app.post('/register', requireLoggedOutUser, (req, res) => {
                     email: email
                 };
 
-                console.log('-----> redirect to /userprofile');
                 res.redirect('/userprofile');
             })
             .catch(err => {
@@ -116,17 +86,11 @@ app.post('/register', requireLoggedOutUser, (req, res) => {
     });
 });
 
-// #GET to /login
 app.get('/login', requireLoggedOutUser, (req, res) => {
-    console.log('-----> made it to GET /login');
     res.render('login');
 });
 
-// #POST to /login
 app.post('/login', requireLoggedOutUser, (req, res) => {
-    console.log('-----> made it to POST /login');
-
-    // compare login data to db entries
     const email = req.body['email'];
     const passwordInput = req.body['password'];
 
@@ -147,12 +111,10 @@ app.post('/login', requireLoggedOutUser, (req, res) => {
                         db.getSignatureId(req.session.user.id)
                             .then(result => {
                                 req.session.user.signatureId = result.rows[0].id;
-                                console.log('-----> redirect to /petition/signed');
                                 res.redirect('/petition/signed');
                             })
                             .catch(err => {
                                 console.log('Error in getSignatureId() on login: ', err);
-                                console.log('-----> redirect to /petition');
                                 res.redirect('/petition');
                             });
                     } else {
@@ -174,16 +136,11 @@ app.post('/login', requireLoggedOutUser, (req, res) => {
         });
 });
 
-// #GET to /userprofile
 app.get('/userprofile', requireLoggedInUser, (req, res) => {
-    console.log('-----> made it to GET /userprofile');
     res.render('userprofile');
 });
 
-// #POST to /userprofile
 app.post('/userprofile', requireLoggedInUser, (req, res) => {
-    console.log('-----> made it to POST /userprofile');
-
     const age = req.body.age || null;
     const city = req.body.city || null;
     const homepage = req.body.homepage || null;
@@ -199,10 +156,7 @@ app.post('/userprofile', requireLoggedInUser, (req, res) => {
         });
 });
 
-// #GET to /userprofile/edit
 app.get('/userprofile/edit', requireLoggedInUser, (req, res) => {
-    console.log('-----> made it to GET /userprofile/edit');
-
     db.getUser(req.session.user.email)
         .then(result => {
             res.render('userprofileEdit', {
@@ -214,10 +168,7 @@ app.get('/userprofile/edit', requireLoggedInUser, (req, res) => {
         });
 });
 
-// #POST to /userprofile/edit
 app.post('/userprofile/edit', requireLoggedInUser, (req, res) => {
-    console.log('-----> made it to POST /userprofile/edit');
-
     const newFirstName = req.body['first-name'];
     const newLastName = req.body['last-name'];
     const newEmail = req.body['email'];
@@ -285,21 +236,15 @@ app.post('/userprofile/edit', requireLoggedInUser, (req, res) => {
     }
 });
 
-// #GET to /userprofile/delete
 app.get('/userprofile/delete', requireLoggedInUser, (req, res) => {
-    console.log('-----> made it to GET /userprofile/delete');
     res.render('userprofileDelete');
 });
 
-// #POST to /userprofile/delete
 app.post('/userprofile/delete', requireLoggedInUser, (req, res) => {
-    console.log('-----> made it to POST /userprofile/delete');
-
     const userId = req.session.user.id;
 
     Promise.all([db.deleteSignature(userId), db.deleteProfile(userId), db.deleteUser(userId)])
         .then(() => {
-            // delete cookie and redirect
             delete req.session.user;
             res.redirect('/');
         })
@@ -312,16 +257,11 @@ app.post('/userprofile/delete', requireLoggedInUser, (req, res) => {
         });
 });
 
-// #GET to /petition
 app.get('/petition', requireLoggedInUser, requireNoSignature, (req, res) => {
-    console.log('-----> made it to GET /petition');
     res.render('petition');
 });
 
-// #POST to /petition
 app.post('/petition', requireLoggedInUser, requireNoSignature, (req, res) => {
-    console.log('-----> made it to the POST /petition');
-
     const signature = req.body['signature-data'];
     const userId = req.session.user.id;
 
@@ -338,10 +278,7 @@ app.post('/petition', requireLoggedInUser, requireNoSignature, (req, res) => {
         });
 });
 
-// #GET to /petition/signed
 app.get('/petition/signed', requireLoggedInUser, requireSignature, (req, res) => {
-    console.log('-----> made it to GET /petition/signed');
-
     db.getSignaturesCount()
         .then(count => {
             db.getSignature(req.session.user.signatureId)
@@ -352,22 +289,19 @@ app.get('/petition/signed', requireLoggedInUser, requireSignature, (req, res) =>
                     });
                 })
                 .catch(err => {
-                    console.log('Error on getSignature on /petition/signed: ', err);
+                    console.log('Error on getSignature() on /petition/signed: ', err);
                 });
         })
         .catch(err => {
-            console.log('err: ', err);
+            console.log('Error on getSignatureCount() on /petition/signed: ', err);
         });
 });
 
-// #POST to /petition/signed
 app.post('/petition/signed', requireLoggedInUser, requireSignature, (req, res) => {
-    console.log('-----> made it to POST /petition/signed');
     delete req.session.user.signatureId;
 
     db.deleteSignature(req.session.user.id)
         .then(() => {
-            console.log('Signature deleted');
             res.redirect('/petition');
         })
         .catch(err => {
@@ -375,36 +309,33 @@ app.post('/petition/signed', requireLoggedInUser, requireSignature, (req, res) =
         });
 });
 
-// #GET to /petition/signers
 app.get('/petition/signers', requireLoggedInUser, requireSignature, (req, res) => {
-    console.log('-----> made it to GET /petition/signers');
-
-    db.getSigners()
-        .then(result => {
-            const signers = result.rows;
-
-            res.render('signatureOverview', {
-                signers
-            });
+    db.getSignaturesCount()
+        .then(count => {
+            db.getSigners()
+                .then(result => {
+                    res.render('signatureOverview', {
+                        signers: result.rows,
+                        count: count.rows[0].count
+                    });
+                })
+                .catch(err => {
+                    console.log('err on getSigners() on /petition/signers: ', err);
+                });
         })
         .catch(err => {
-            console.log('err on getSigners() on /petition/signers: ', err);
+            console.log('Error on getSignatureCount() on /petition/signers: ', err);
         });
 });
 
-// #GET to /petition/signers/:city
 app.get('/petition/signers/:city', requireLoggedInUser, requireSignature, (req, res) => {
-    console.log('-----> made it to GET /petition/signers:city');
-
     const city = req.params.city;
 
     db.getSigners()
         .then(result => {
-            const signers = result.rows;
-
             res.render('signatureOverviewCity', {
                 city,
-                signers,
+                signers: result.rows,
                 helpers: {
                     checkCity(arg) {
                         if (arg != null) {
@@ -421,15 +352,11 @@ app.get('/petition/signers/:city', requireLoggedInUser, requireSignature, (req, 
         });
 });
 
-// #GET to /logout
 app.get('/logout', requireLoggedInUser, (req, res) => {
-    console.log('-----> made it to GET /logout');
-
     delete req.session.user;
     res.redirect('/');
 });
 
-// Only listen if app is started by the main module (index.js) -> NOT FOR SUPERTEST
 if (require.main == module) {
     app.listen(PORT, () => {
         console.log(`Server is listening on ${PORT}`);

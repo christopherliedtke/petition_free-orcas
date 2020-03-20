@@ -1,5 +1,3 @@
--- psql -d petition -f tables/profiles.sql
-
 DROP TABLE IF EXISTS profiles;
 
 CREATE TABLE profiles (

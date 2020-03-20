@@ -1,5 +1,5 @@
 const supertest = require('supertest');
-const app = require('./index');
+const { app } = require('./index');
 const cookieSession = require('cookie-session');
 const db = require('./utils/db');
 

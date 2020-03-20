@@ -1,7 +1,5 @@
 <div class="container" id="userprofile">
     <h1>Free <span class="text-dark text-shadow-light">ORCAS</span></h1>
-    {{!-- <h2>from the swimming pool</h2> --}}
-
     <h3>PLEASE TELL US A LITTLE MORE ABOUT YOURSELF!</h3>
 
     {{#if error}}
@@ -16,5 +14,4 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
         <button type="submit">CONTINUE</button>
     </form>
-    {{!-- <a class="text-center">Already registered? <a href="/login">LogIn here!</a></a> --}}
 </div>

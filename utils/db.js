@@ -1,6 +1,4 @@
 const spicedPg = require('spiced-pg');
-// const secrets = require('./secrets');
-// const db = spicedPg(`postgres:${secrets.database.user}:${secrets.database.pw}@localhost:5432/${secrets.database.name}`);
 
 let db;
 if (process.env.DATABASE_URL) {
