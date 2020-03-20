@@ -143,16 +143,22 @@ app.get('/userprofile', requireLoggedInUser, (req, res) => {
 app.post('/userprofile', requireLoggedInUser, (req, res) => {
     const age = req.body.age || null;
     const city = req.body.city || null;
-    const homepage = req.body.homepage || null;
+    let homepage = req.body.homepage || null;
     const id = req.session.user.id;
+
+    if (!homepage.startsWith('http')) {
+        homepage = null;
+    }
 
     db.addProfile(age, city, homepage, id)
         .then(() => {
-            console.log('-----> redirect to /petition');
             res.redirect('/petition');
         })
         .catch(err => {
             console.log('Error on addProfile() on /userprofile: ', err);
+            res.render('userprofileEdit', {
+                error: errorMsg
+            });
         });
 });
 
