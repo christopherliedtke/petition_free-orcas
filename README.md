@@ -34,6 +34,6 @@
 -   Redis
 -   Jest/Supertest
 
-![alt text](public/#1.gif '#1')
+![alt text](public/freeOrcasPetition.gif 'Petition - Free ORCAS')
 
 [Link to Live App](https://free-willy.herokuapp.com/)
