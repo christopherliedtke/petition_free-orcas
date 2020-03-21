@@ -143,7 +143,7 @@ app.get('/userprofile', requireLoggedInUser, (req, res) => {
 app.post('/userprofile', requireLoggedInUser, (req, res) => {
     const age = req.body.age || null;
     const city = req.body.city || null;
-    let homepage = req.body.homepage || null;
+    let homepage = req.body.homepage;
     const id = req.session.user.id;
 
     if (!homepage.startsWith('http')) {
@@ -181,8 +181,12 @@ app.post('/userprofile/edit', requireLoggedInUser, (req, res) => {
     const newPassword = req.body['password'] || null;
     const newAge = req.body['age'] || null;
     const newCity = req.body['city'] || null;
-    const newHomepage = req.body['homepage'] || null;
+    let newHomepage = req.body['homepage'];
     const userId = req.session.user.id;
+
+    if (!newHomepage.startsWith('http')) {
+        newHomepage = null;
+    }
 
     if (newPassword === null) {
         Promise.all([db.updateUserExclPassword(newFirstName, newLastName, newEmail, userId), db.updateProfile(newAge, newCity, newHomepage, userId)])
@@ -359,7 +363,7 @@ app.get('/petition/signers/:city', requireLoggedInUser, requireSignature, (req, 
 });
 
 app.get('/logout', requireLoggedInUser, (req, res) => {
-    delete req.session.user;
+    req.session = null;
     res.redirect('/');
 });
 
