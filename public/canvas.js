@@ -29,14 +29,14 @@
     canvas.on('touchstart', function(e) {
         e.preventDefault();
 
-        var positionX = e.targetTouches[0].pageX - e.target.offsetLeft;
-        var positionY = e.targetTouches[0].pageY - e.target.offsetTop;
+        var positionX = ((e.targetTouches[0].pageX - e.target.offsetLeft) * 4) / 3;
+        var positionY = ((e.targetTouches[0].pageY - e.target.offsetTop) * 4) / 3;
         ctx.beginPath();
         ctx.moveTo(positionX, positionY);
 
         canvas.on('touchmove', function(e) {
-            positionX = e.targetTouches[0].pageX - e.target.offsetLeft;
-            positionY = e.targetTouches[0].pageY - e.target.offsetTop;
+            positionX = ((e.targetTouches[0].pageX - e.target.offsetLeft) * 4) / 3;
+            positionY = ((e.targetTouches[0].pageY - e.target.offsetTop) * 4) / 3;
             ctx.lineTo(positionX, positionY);
             ctx.stroke();
         });

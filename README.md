@@ -12,7 +12,7 @@ This petition project includes a website where anyone is able to register and si
     -   Set/change user profile
     -   Access to specific routes based on user data
 -   Petition signing
-    -   Digital signing through canvas
+    -   Digital signing through canvas (mouse OR touch)
     -   Sign/Unsign functionality
 -   Database
     -   Data storage, retrieving and updating through SQL/Postgre
