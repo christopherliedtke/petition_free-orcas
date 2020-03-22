@@ -268,7 +268,9 @@ app.post('/userprofile/delete', requireLoggedInUser, (req, res) => {
 });
 
 app.get('/petition', requireLoggedInUser, requireNoSignature, (req, res) => {
-    res.render('petition');
+    res.render('petition', {
+        canvas: true
+    });
 });
 
 app.post('/petition', requireLoggedInUser, requireNoSignature, (req, res) => {
@@ -283,7 +285,8 @@ app.post('/petition', requireLoggedInUser, requireNoSignature, (req, res) => {
         .catch(err => {
             console.log('error on addSignature() on /petition: ', err);
             res.render('petition', {
-                error: errorMsg
+                error: errorMsg,
+                canvas: true
             });
         });
 });

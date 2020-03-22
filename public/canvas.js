@@ -4,8 +4,6 @@
     var deleteButton = $('#delete');
     var ctx = canvas[0].getContext('2d');
 
-    console.log('canvas: ', canvas);
-
     ctx.strokeStyle = '#2a1d21';
     ctx.lineWidth = 2;
 
@@ -24,6 +22,27 @@
 
         canvas.on('mouseup', function() {
             canvas.unbind('mousemove');
+            signature.val(canvas[0].toDataURL());
+        });
+    });
+
+    canvas.on('touchstart', function(e) {
+        e.preventDefault();
+
+        var positionX = e.targetTouches[0].pageX - e.target.offsetLeft;
+        var positionY = e.targetTouches[0].pageY - e.target.offsetTop;
+        ctx.beginPath();
+        ctx.moveTo(positionX, positionY);
+
+        canvas.on('touchmove', function(e) {
+            positionX = e.targetTouches[0].pageX - e.target.offsetLeft;
+            positionY = e.targetTouches[0].pageY - e.target.offsetTop;
+            ctx.lineTo(positionX, positionY);
+            ctx.stroke();
+        });
+
+        canvas.on('touchend', function() {
+            canvas.unbind('touchmove');
             signature.val(canvas[0].toDataURL());
         });
     });

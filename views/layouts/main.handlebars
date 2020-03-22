@@ -29,6 +29,7 @@
                 {{/if}}
                 {{#if loggedIn}}<a href="/logout"><button class="log">Logout</button></a> {{else}} <a href="/login"><button class="log">Login</button></a> {{/if}}
             </nav>
+            <img id="hamburger" src="/hamburgermenu.svg" alt="Menu Icon" height="40px">
         </header>
         
         <main>
@@ -43,6 +44,10 @@
                 <span>&copy; Free Willy Foundation</span>
             </div>
         </footer>
+
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        {{#if canvas}} <script src="/canvas.js"></script> {{/if}}
+        <script src="/script.js"></script>
 
     </body>
 </html>
