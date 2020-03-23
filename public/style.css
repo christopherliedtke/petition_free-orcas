@@ -28,7 +28,6 @@ header {
     font-family: 'Sen', sans-serif;
     background-color: rgba(0, 0, 0, 0.8);
     position: relative;
-    display: static;
 }
 
 header img {
@@ -231,6 +230,7 @@ footer img {
     header {
         display: flex;
         align-items: center;
+        position: fixed;
     }
 
     header img {
@@ -244,14 +244,14 @@ footer img {
         flex-direction: column;
         padding: 10px 0px;
         position: absolute;
-        top: 0;
+        top: 50px;
         left: 0;
-        transform: translateY(-100%);
+        transform: translateX(-100%);
     }
 
     nav.show {
-        top: 50px;
-        transform: translateY(0%);
+        /* top: 50px; */
+        transform: translateX(0%);
     }
 
     nav a {
