@@ -250,7 +250,6 @@ footer img {
     }
 
     nav.show {
-        /* top: 50px; */
         transform: translateX(0%);
     }
 
