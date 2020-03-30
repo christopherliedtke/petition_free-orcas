@@ -34,6 +34,10 @@ This petition project includes a website where anyone is able to register and si
 -   Redis
 -   Jest/Supertest
 
-![alt text](public/freeOrcasPetition.gif 'Petition - Free ORCAS')
+## Demo
 
 [Link to Live App](https://free-willy.herokuapp.com/)
+
+#### Register/Delete Account | Login/Logout | Sign/Unsign | Add/Change User Profile Data | See Signers
+
+![alt text](public/freeOrcasPetition.gif 'Petition - Free ORCAS')
